@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+
+<!-- Mirrored from photoskiff.com/zaruba/help-en.html?lang=en by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 14 Feb 2026 04:42:41 GMT -->
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TMIC — User Guide (EN)</title>
+  <link rel="stylesheet" href="zone-comparator.css" />
+  <style>
+    .help-header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:20px; }
+    .help-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .help-main { padding: 0 20px 24px; max-width: clamp(1080px, 92vw, 1480px); margin: 0 auto; }
+    .help-card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border: 1px solid #1f2937; border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .help-content h1 { font-size: 22px; margin: 0 0 8px; }
+    .help-content h2 { font-size: 16px; margin: 16px 0 8px; }
+    .help-content h3 { font-size: 14px; margin: 14px 0 6px; }
+    .help-content p { margin: 8px 0; color: var(--text); }
+    .help-content ul, .help-content ol { margin: 6px 0 10px 20px; padding: 0; }
+    .help-sep { height: 10px; }
+    .back-btn { text-decoration: none; }
+    .muted { color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header class="help-header">
+    <div>
+      <h1 id="top" style="margin:0;font-size:20px">Training Method Interactive Comparator (TMIC)<span class="ver"> v2</span></h1>
+      <div class="ver">User Guide (EN)</div>
+    </div>
+    <div class="help-actions">
+      <a class="btn back-btn" id="backLink" href="#">← Open comparator</a>
+      <div class="lang" id="langTop">
+        <span id="langLab">Language:</span>
+        <button class="toggle" id="langBtn" type="button">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="help-main">
+    <section class="help-card help-content">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="#import-quality">Import data quality</a></li>
+        <li><a href="#methods-overview">Methods: what’s what</a></li>
+        <li><a href="#schema-timer">Scheme & timer (integration)</a></li>
+        <li><a href="#kettlebells">Kettlebells: SN & SW</a></li>
+        <li><a href="#ai-brief">AI brief for analysis (offline)</a></li>
+        <li><a href="#summary-built-in">Workout summary (built-in)</a></li>
+        <li><a href="#zaruba-custom">Zaruba: custom patterns</a></li>
+        <li><a href="#zaruba-optimizer">Zaruba: optimizer (DP plan)</a></li>
+        <li><a href="#big-chart">Big chart & mobile mode</a></li>
+      </ul>
+    </section>
+
+    <section class="help-card help-content">
+      <h2>Purpose</h2>
+      <p>Help you quickly choose an appropriate workout type for a goal, compare options by risks/load/time, and (when needed) fit the model to a real HR recording to understand how effective the session actually was.</p>
+      <p>This is a single-page browser tool with interactive HR simulation for multiple scenarios (SIT, HIIT, Zaruba/EMOM, Snatch (SN), Swings (SW), Zone 2, Zone 3–4), a dynamic metrics table, presets, export, and a big chart.</p>
+
+      <div class="help-sep"></div>
+      <h2>Quick start (5 steps)</h2>
+      <ol>
+        <li>Switch language if needed (EN/RU in the top-right corner).</li>
+        <li>Fill Inputs: age, HRrest, optionally HRmax. If HRmax is left empty, TMIC uses auto (≈ 220 − age) and shows a warning under the HRmax field and in the “Computed zones” block (zones become approximate). Keep Karvonen (HRR) enabled if you know your HRrest.</li>
+        <li>Select methods to compare: SIT, HIIT, Zaruba, Snatch (SN), Swings (SW), Zone 2, Zone 3–4.</li>
+        <li>Tune parameters per method and watch the chart/table update.</li>
+        <li>Open Big chart for details; export metrics (CSV) or chart (PNG).</li>
+      </ol>
+
+      <div class="help-sep"></div>
+      <h2>HR import (CSV/FIT)</h2>
+      <ul>
+        <li><b>Import HR (CSV/FIT)</b> supports .csv/.txt and .fit. <b>Clear imports</b> removes imported series.</li>
+        <li><b>Import offset (s)</b>: shift the imported series left/right to align with the model. Negative = earlier, positive = later. The value is saved in presets and last state.</li>
+        <li><b>Trim start (s)</b>: remove initial seconds from the imported recording (Auto tries to detect the workout start). You can choose whether trimming affects chart alignment.</li>
+      </ul>
+
+      <h3>Supported formats</h3>
+      <ul>
+        <li>CSV/TXT: delimiter auto-detected (comma, ';', tab, '|'). Time can be time/timestamp/datetime/elapsed/seconds/sec, hh:mm[:ss], or ISO. HR can be hr/heart_rate/bpm/pulse.</li>
+        <li>Single-column CSV: treated as 1 Hz HR values with synthetic time 0,1,2… (some advanced checks may be unavailable).</li>
+        <li>If FIT import fails, convert FIT → CSV using <span class="mono">fit-to-csv.py</span> and import the CSV.</li>
+      </ul>
+
+      <h3>Import visualization</h3>
+      <ul>
+        <li>Imported series are overlaid on the chart and shown in the legend (“Import”, “FIT (import)”).</li>
+        <li>“Series CSV” export contains the simulated methods (SIT/HIIT/SN/SW/Z2/Z34/ZRB). Imported series are not included there.</li>
+      </ul>
+
+      <h3 id="import-quality">Import data quality</h3>
+      <ul>
+        <li>After import, the <b>Import</b> menu shows <b>Data quality</b>: Good/OK/Poor, score (0–100), and brief artifact hints (dt, spikes, gaps, out-of-range).</li>
+        <li>The same “Data quality” row appears in <b>Show summary</b>.</li>
+        <li>If quality is <b>Poor</b>, the tool flags HRmax fitting and τ estimation as potentially <b>unreliable</b> and shows a caution message (check sensor/export and import settings: offset/trim).</li>
+        <li>Artifact hints include not only spikes/gaps but also unrealistic change rate (very high dHR/dt), which often indicates sensor/export issues.</li>
+        <li>If there is no real time axis, quality may be unavailable.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2>Interface (short)</h2>
+      <ul>
+        <li>Inputs: age, HRrest/HRmax (if HRmax is empty, auto-by-age is used and a warning is shown), HRR toggle, drift, TRIMP sex, τ_ON/τ_OFF, warm-up/cool-down.</li>
+        <li>Intervals: SIT/HIIT/Zaruba — work/rest/intervals/RPE, HIIT rest intensity, Zaruba EMOM patterns (including custom).</li>
+        <li>Kettlebells: Snatch (SN) and Swings (SW) have dedicated cards with bell/session parameters.</li>
+        <li>Steady: Zone 2 and Zone 3–4 — duration and target (% HRR / % HRmax).</li>
+        <li>Toolbar: export CSV/PNG, Big chart, AI brief, presets, import (offset/trim).</li>
+        <li>Integration: pick an active method → chart/scheme/timer follow it. Switching method auto-focuses the chart on that method (HR imports stay visible).</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="schema-timer">Scheme & timer (integration)</h2>
+      <ul>
+        <li><b>Scheme editor</b>: the scheme text is the source of truth for preview and timer. The editor includes a <b>Plan</b> panel built from the current scheme text and updated live while you edit.</li>
+        <li><b>Library</b>: built-in presets + <b>My schemes</b> (saved locally on this device). You can export/import “My schemes” as a single-line JSON to move them between devices.</li>
+        <li><b>Big Screen (timer)</b>: voice/metronome/plan support plus configurable pre-start countdown (0–30 sec, default 5).</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="methods-overview">Methods (very short): what’s what</h2>
+      <ul>
+        <li><b>SIT</b> (Sprint Interval Training): very hard short work bouts + very long rest (often passive). High peaks, lots of recovery time.</li>
+        <li><b>HIIT</b>: intervals with denser recovery (often active). HR drops less during rest → higher average intensity.</li>
+        <li><b>Zaruba / EMOM</b>: minute-based On/Off cycles. There are 2 modes: <b>Classic</b> (RPE 6–10) and <b>Universal</b> (intensity 2–10, wider range). You can use templates or define a custom minute pattern.</li>
+        <li><b>Zone 2</b>: steady aerobic work below threshold; defined by duration and target (%HRR/%HRmax).</li>
+        <li><b>Zone 3–4</b>: tempo/threshold steady work; also defined by duration and target.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="kettlebells">Kettlebells: Snatch (SN) and Swings (SW)</h2>
+
+      <h3>Snatch (SN)</h3>
+      <ul>
+        <li>Snatch intensity is intentionally <b>not driven by RPE</b>. It depends on <b>cadence + bell weight</b> to better match real sessions.</li>
+        <li>Controls: duration (min), weight (kg), cadence (reps/min), protocol (Classic/Army), hand change time (Classic only).</li>
+      </ul>
+
+      <h3>Swings (SW)</h3>
+      <ul>
+        <li><b>Intensity (2–10)</b> is a dedicated working scale for swings (it is not “RPE 6–10”). It helps model different effort modes at the same bell weight.</li>
+        <li><b>Style</b> is a preset:</li>
+        <ul>
+          <li><b>Universal (flexible)</b>: most forgiving, good for non-standard variants.</li>
+          <li><b>Chest height (1H)</b>: slightly stronger dependence on intensity at a given weight.</li>
+          <li><b>Overhead (2H)</b>: <b>no hand changes</b> — protocol and “hand change at (min)” are hidden and ignored. This style is also more energy-expensive and reaches the plateau faster.</li>
+        </ul>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="ai-brief">AI brief for analysis (offline)</h2>
+      <p>Buttons in the AI menu generate a local Markdown file containing an instruction block plus JSON data. No internet/account is required to generate it; you can paste it into ChatGPT or another LLM.</p>
+      <ul>
+        <li>Brief: instruction + inputs, active methods, zones (bpm), key metrics (RMSE/correlation/τ), and an aligned overlap sample (model vs real).</li>
+        <li>Detailed: additionally includes minute-level aggregates (average HR, slope bpm/min, time fractions in Z1..Z5) and denser sampling.</li>
+        <li>Privacy: everything is generated locally in your browser. Optionally the file can include a <span class="mono">shareUrl</span> to reproduce the state.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="summary-built-in">Workout summary (built-in)</h2>
+      <p><b>Show summary</b> under the chart opens a compact report for the current configuration and (if present) the imported HR recording.</p>
+      <ul>
+        <li>Shows: model ↔ recording agreement (correlation, RMSE), τ_ON/τ_OFF estimates, expected vs observed peaks, and the <b>Data quality</b> of the import.</li>
+        <li>HRmax (fit): HRmax fitting details are shown <b>only</b> when you enable <b>“Help estimate HRmax from this workout”</b> (Off = keep my HRmax).</li>
+        <li>If user-set HRmax differs substantially from fitted HRmax, summary shows an explicit warning (often means wrong HRmax settings or import artifacts).</li>
+        <li>If HRmax is not set and auto-by-age is used, summary and “Computed zones” show a clear warning: real HRmax may differ substantially, shifting zones/targets. Recommendation: determine your actual HRmax before training strictly by zones.</li>
+        <li>If overlap is small or correlation is low, summary labels the conclusions as less reliable.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2>Fitting the model to your session</h2>
+      <ol>
+        <li>Import CSV/FIT and align using <b>Import offset (s)</b>. Pick the correct method: Zone2/3–4 for steady, HIIT/SIT for intervals, Zaruba for EMOM patterns.</li>
+        <li>Match duration/structure to your workout (work/rest/intervals; for Zaruba: duration + on/off or custom pattern; for steady: duration; warm-up/cool-down as in the session).</li>
+        <li>Match amplitude: RPE affects peaks; HIIT rest intensity raises the “floor”; Zone targets shift the steady level.</li>
+        <li>Match shape: drift controls tail slope; τ_ON/τ_OFF controls rise/recovery speed.</li>
+        <li>Verify in Big chart, then use Summary/metrics.</li>
+      </ol>
+
+      <div class="help-sep"></div>
+      <h2 id="zaruba-custom">Zaruba: custom patterns</h2>
+      <p>Beyond simple EMOM (On/Off + duration), you can specify a free-form minute pattern: click Edit and type a scheme.</p>
+      <ul>
+        <li>Examples: <span class="mono">30/30 x5</span>, <span class="mono">30/30 *5</span>, <span class="mono">20/40,25/35</span>, or pairs like <span class="mono">30 30 20 40</span>.</li>
+        <li>Groups: <span class="mono">( ... )*N</span>, e.g. <span class="mono">(30@8t20 20@8t15 0/10 30@8t20)*3</span>.</li>
+        <li>Important: after a closing parenthesis <span class="mono">)</span>, only a group multiplier <span class="mono">*N</span>/<span class="mono">xN</span> is supported. Patterns like <span class="mono">(...)@6</span> are not supported (put <span class="mono">@...</span> suffixes inside the group).</li>
+        <li>Discrete milestones / EMOM: <span class="mono">20/0</span> or <span class="mono">20/0*3</span>. Even with <span class="mono">off=0</span>, intervals stay separate blocks (fresh countdown each time).</li>
+          <li>Finish markers: add <span class="mono">;</span> at the end to run the scheme once, then the remaining time (if any) follows the default On/Off engine. Add <span class="mono">#</span> to hard-stop right after the scheme (Duration becomes the scheme length). If the scheme is longer than Duration, Duration auto-expands to fit the scheme.</li>
+        <li>Multipliers: <span class="mono">x</span>, <span class="mono">×</span>, <span class="mono">*</span>.</li>
+        <li>Per-block intensity: <span class="mono">120/120@6*5 60/60@8*5</span> (suffix <span class="mono">@x</span> applies intensity only to that block; decimals are supported). <span class="mono">120/120*5@6</span> is also accepted.</li>
+        <li>Per-block tempo override (metronome): <span class="mono">30/20@8t15/2t60</span> where <span class="mono">tXX</span> sets the <b>actual metronome RPM</b> for that phase. It is <b>not scaled</b> by intensity. The model may fail to sustain it due to fatigue, but timer/voice/metronome are guided by this RPM.</li>
+        <li>Compatibility note: emitted patterns use lowercase <span class="mono">t</span>. Uppercase <span class="mono">T</span> is accepted as input and normalized to <span class="mono">t</span>.</li>
+        <li>Work reps target: <span class="mono">rNN</span> (inside <span class="mono">@...</span>), e.g. <span class="mono">20@8r12</span>. This means “do N reps during the ON time”; the metronome tempo for that block is derived from the target. Important: <span class="mono">rNN</span> is mutually exclusive with a tempo override (<span class="mono">tXX</span>) for the same block.</li>
+        <li>Repeat can be placed after the <span class="mono">@...</span> suffix: <span class="mono">60/0@5t20*5 60/0@7t20*5#</span>.</li>
+        <li>Continuous work must be explicit via <span class="mono">/0</span>: <span class="mono">60/0*10</span> (otherwise you get default Off/rest behavior).</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="zaruba-optimizer">Zaruba: optimizer (DP plan)</h2>
+      <p>The optimizer helps you <b>build a plan for the selected Duration</b> (in Universal mode) for a target rep count under cadence and recovery constraints. It is not a “prediction oracle” — it searches many candidates and picks the best plan (dynamic programming).</p>
+      <h3>Inputs</h3>
+      <ul>
+        <li><b>Target reps</b> — desired total reps within the selected <b>Duration</b>.</li>
+        <li><b>Cadence max</b> — a hard cap (rpm). The optimizer may choose a lower pace (and then the plan may include <span class="mono">tXX</span>).</li>
+        <li><b>All‑out sec</b> — how long you can hold the absolute max output before it drops.</li>
+        <li><b>Recovery tau</b> — recovery speed (higher = slower recovery).</li>
+        <li><b>Switch cost (s)</b> — non-productive time at the start of each work block (setup/transition). Important: it’s accounted for in simulation and in the <b>Zaruba Timer</b>.</li>
+        <li><b>Tempo fatigue exponent</b> — how strongly fatigue grows with higher cadence. Higher value → high tempos become “more expensive”, so the optimizer more often prefers rest or lower tempo.</li>
+        <li><b>Tempo sustain cap exponent</b> — how aggressively long continuous high-tempo segments are capped. Higher value → shorter allowable continuous blocks at high tempo (more splitting/rest).</li>
+        <li><b>Cycles (0=auto)</b> — pins the number of <b>work</b> blocks in the plan. Examples: <b>1</b> → fully continuous work (often emitted as a reps target <span class="mono">rNN</span> so tempo is derived automatically and looks realistic); <b>2</b> → “steady + finish sprint” (two back-to-back <span class="mono">/0</span> blocks). With <b>Cycles &gt; 0</b> the optimizer <b>never ends the plan with rest</b> (no trailing pause).</li>
+        <li><b>Finish sprint (sec, 0=off)</b> — how many seconds at the end are reserved for a final “push” (a separate finishing work block with no pause). Mainly relevant when <b>Cycles &gt; 0</b>: set to <b>0</b> for a fully steady tail, or e.g. <b>20</b> to make the last 20 seconds faster (still <span class="mono">/0</span>, no trailing rest).</li>
+      </ul>
+      <h3>Outputs</h3>
+      <ul>
+        <li>A concrete <b>work/rest schedule</b> (and predicted reps).</li>
+        <li>Sometimes a <b>continuous</b> plan without stops at a lower tempo (via <span class="mono">/0</span> + <span class="mono">tXX</span>).</li>
+        <li>Plans often include deliberate rest to preserve cadence across the full Duration.</li>
+      </ul>
+      <h3>How to use</h3>
+      <ul>
+        <li>Generate a plan → apply it to Zaruba settings → open <b>Zaruba Timer</b> (timer/voice/metronome) and follow the phases.</li>
+        <li>If a non-zero rest intensity is set (active recovery), Zaruba Timer will announce it.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2 id="big-chart">Big chart & mobile mode</h2>
+      <ul>
+        <li>Open: Big chart button in the toolbar (or a floating button on mobile).</li>
+        <li>On mobile, floating buttons provide quick access (including scheme/timer/chart) and always open the same integrated flows for the active method.</li>
+        <li>Close: click outside the modal or press Esc.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2>How to read chart and table</h2>
+      <ul>
+        <li>Chart: X = time, Y = HR; zones Z1..Z5 are shown as background bands. Multiple methods can be overlaid.</li>
+        <li>Table: compare Time efficiency, Load (AU), Zonal load, Cardio/Cort/Injury under the same Inputs.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2>Presets, export, sharing</h2>
+      <ul>
+        <li>Presets: Save / Save as new / Load / Delete / Reset. Last state is auto-saved.</li>
+        <li>Share: Copy state link produces a URL with all settings.</li>
+        <li>Export: Metrics CSV / Series CSV / Chart PNG / Print table (PDF).</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2>FAQ</h2>
+      <ul>
+        <li>HRR vs %HRmax: if you know HRrest and have a reasonable HRmax estimate, prefer HRR (Karvonen).</li>
+        <li>RPE: subjective 6–10 scale controlling target intensity during work segments in SIT/HIIT/Zaruba. Snatch (SN) uses cadence+weight; Swings (SW) use intensity 2–10 + weight + style.</li>
+        <li>AU vs Zonal load: AU is intensity-weighted (TRIMP-like); Zonal is stepwise by zone time.</li>
+        <li>Orange chip in “Computed zones”: means HRmax is auto-estimated by age (HRmax input is empty). In this mode, zone boundaries and targets may be noticeably off. Recommendation: enter your HRmax (or determine it via a test/race) if you want to train strictly by zones.</li>
+      </ul>
+
+      <div class="help-sep"></div>
+      <h2>Disclaimer</h2>
+      <p>This is an educational heuristic tool. Consider your health status and contraindications; if unsure, consult a professional.</p>
+
+      <div class="help-sep"></div>
+      <div class="muted">© Serega Photoskiff / TMIC, 2026</div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const current = 'en';
+      const fromParam = (() => {
+        try {
+          const v = new URLSearchParams(location.search || '').get('from');
+          return v ? String(v) : '';
+        } catch (_) { return ''; }
+      })();
+
+      const resolveBackUrl = () => {
+        try {
+          if (fromParam) {
+            const u = new URL(fromParam%2c%20location.html);
+            if (u.origin === location.origin) return u.href;
+          }
+        } catch (_) {}
+        try {
+          const r = String(document.referrer || '');
+          if (r) {
+            const u = new URL(r.html);
+            if (u.origin === location.origin) return u.href;
+          }
+        } catch (_) {}
+        // Fallback: do not hardcode comparator filename.
+        // Best-effort: go to the current directory.
+        return './';
+      };
+
+      try {
+        const a = document.getElementById('backLink');
+        if (a) {
+          const backUrl = resolveBackUrl();
+          a.href = backUrl;
+          a.onclick = (e) => {
+            try {
+              if (history.length > 1) {
+                history.back();
+                e.preventDefault();
+                return false;
+              }
+            } catch (_) {}
+            a.href = backUrl;
+            return true;
+          };
+        }
+      } catch (_) {}
+
+      const urlLang = (() => {
+        try {
+          const v = new URLSearchParams(location.search || '').get('lang');
+          return (v === 'ru' || v === 'en') ? v : null;
+        } catch (_) { return null; }
+      })();
+      const stored = (() => { try { return localStorage.getItem('sit_lang'); } catch (_) { return null; } })();
+      const target = urlLang || ((stored === 'ru' || stored === 'en') ? stored : current);
+      try { localStorage.setItem('sit_lang', target); } catch (_) {}
+      if (target !== current) {
+        location.replace('help-ru2139.html?lang=ru' + (fromParam ? ('&from=' + encodeURIComponent(fromParam)) : ''));
+        return;
+      }
+      // Clean URL: do not keep stale ?lang= once it is applied.
+      try {
+        const u = new URL(location.html);
+        u.searchParams.delete('lang');
+        const newUrl = u.pathname + (u.searchParams.toString() ? ('?' + u.searchParams.toString()) : '') + (u.hash || '');
+        history.replaceState(null, '', newUrl);
+      } catch (_) {}
+      const lab = document.getElementById('langLab');
+      const btn = document.getElementById('langBtn');
+      if (lab) lab.textContent = 'Language:';
+      if (btn) {
+        btn.textContent = 'EN';
+        btn.onclick = () => {
+          try { localStorage.setItem('sit_lang', 'ru'); } catch (_) {}
+          location.href = 'help-ru2139.html?lang=ru' + (fromParam ? ('&from=' + encodeURIComponent(fromParam)) : '');
+        };
+      }
+    })();
+  </script>
+</body>
+
+<!-- Mirrored from photoskiff.com/zaruba/help-en.html?lang=en by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 14 Feb 2026 04:42:41 GMT -->
+</html>

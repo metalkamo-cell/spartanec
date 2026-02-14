@@ -1,0 +1,1469 @@
+:root {
+    --bg: #0f172a;
+    --panel: #111827;
+    --soft: #1f2937;
+    --muted: #94a3b8;
+    --text: #e5e7eb;
+    --sit: #60a5fa;
+    --hiit: #f59e0b;
+    --z2: #34d399;
+    --z34: #a78bfa;
+    /* add explicit colors for Z3 and Z5 to style zone chip borders */
+    --z3: #8b5cf6; /* violet */
+    --z5: #ef4444; /* red */
+    --sn: #fb7185; /* rose for Snatch */
+    --sw: #14b8a6; /* teal for Swings */
+    --str: #f472b6;
+    --zaruba: #22d3ee;
+    --grid: #243246;
+}
+
+html { font-size: 16px; }
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    min-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+    .modal { height: 100dvh; }
+    .modal.fullscreen .modal-card { height: 100dvh; max-height: 100dvh; }
+}
+
+/* When modal is open, force root elements to match viewport to avoid tiny body issues */
+html.modal-open, body.modal-open {
+    overflow: hidden; /* disable background scroll while modal open without altering layout sizing */
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    background: radial-gradient(1200px 800px at 70% -10%, #142138 0%, var(--bg) 50%) fixed;
+    overflow-x: hidden; /* prevent accidental off-screen overflow */
+}
+
+/* Prevent mobile text autosizing that can look like a zoom after layout changes */
+html, body {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px
+}
+
+header h1 {
+    margin: 0;
+    font-size: 20px
+}
+
+header .ver {
+    opacity: .7;
+    font-size: 12px
+}
+
+.wrap {
+    padding: 0 20px 24px;
+    /* Full width with a safe cap to prevent overflow */
+    width: 100%;
+    max-width: min(1480px, 92vw);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+    align-items: start;
+    max-width: 100%;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .01));
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    max-width: 100%;
+    min-width: 0; /* allow shrinking inside grid */
+}
+
+.card h2 {
+    margin: 0 0 10px;
+    font-size: 15px
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-width: 0; /* prevent child overflow */
+}
+
+.col {
+    flex: 1 1 260px;
+    min-width: 0; /* allow shrinking */
+}
+
+/* Compact inputs row: keep controls on one line until space runs out */
+.inputsRow .col {
+    flex: 0 0 auto; /* size to content */
+}
+.inputsRow select {
+    max-width: 220px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#capMax { display: none; }
+
+/* Tight row: reduce gaps and size columns to content */
+.row-tight {
+    gap: 8px;
+}
+.row-tight .col {
+    flex: 0 0 auto;
+}
+.row-tight #activity {
+    max-width: 200px;
+}
+
+label {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin: 8px 0 6px
+}
+
+input[type=range] {
+    width: 100%
+}
+
+.num {
+    display: flex;
+    gap: 6px;
+    align-items: center
+}
+
+.num input {
+    width: 88px;
+    background: var(--soft);
+    border: 1px solid #263241;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 8px
+}
+
+.val {
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-left: 6px;
+    opacity: .9
+}
+
+.zones {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap
+}
+
+.zone {
+    padding: 6px 8px;
+    background: #0c1221;
+    border: 1px solid #263241;
+    border-radius: 10px;
+    font-size: 12px
+}
+
+/* Zone chip colored borders */
+.zone.is-z2 { border-color: var(--z2); }
+.zone.is-z3 { border-color: var(--z3, var(--z34)); }
+.zone.is-z4 { border-color: var(--hiit); }
+.zone.is-z5 { border-color: var(--z5); }
+
+.zone.is-warn {
+    border-color: var(--mid, #f59e0b);
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+}
+
+.checks {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap
+}
+
+.checks label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0c1221;
+    border: 1px solid #263241;
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #cbd5e1
+}
+
+.checks input {
+    accent-color: #60a5fa
+}
+
+/* Inline layout for Max HR + HRmax formula selector */
+.inline-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap; /* allow wrap on very narrow screens */
+}
+.inline-controls label {
+    margin: 0; /* cancel global label block margins inside inline row */
+}
+
+.chart {
+    width: 100%;
+    height: 420px;
+    background: #0b1222;
+    border: 1px solid #243246;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-in
+}
+
+/* Prefer dynamic viewport units on mobile browsers that support them */
+@supports (height: 70dvh) {
+    .chart { height: 50dvh; }
+}
+
+.chart svg {
+    position: absolute;
+    inset: 0
+}
+
+.legend {
+    font-size: 12px;
+    color: #cbd5e1;
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    align-items: center;
+    flex-wrap: wrap
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%
+}
+
+.sit {
+    background: var(--sit)
+}
+
+.hiit {
+    background: var(--hiit)
+}
+
+.z2 {
+    background: var(--z2)
+}
+
+.z34 {
+    background: var(--z34)
+}
+.sn {
+    background: var(--sn)
+}
+.sw {
+    background: var(--sw)
+}
+
+.zaruba {
+    background: var(--zaruba)
+}
+
+/* imported CSV series legend dot */
+.csvimp {
+    background: #f87171; /* soft red; distinct from Z5 band fill */
+}
+.fitimp {
+    background: #22c55e; /* green */
+}
+
+.caption {
+    color: #9ca3af;
+    font-size: 12px;
+    margin-top: 6px
+}
+
+.toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 8px 0 0;
+    min-width: 0; /* allow children to shrink and wrap */
+}
+
+.btn {
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px
+}
+
+/* Accent buttons (highlight important actions) */
+.btn.btn-yellow {
+    background: linear-gradient(180deg, #fde68a 0%, #fbbf24 60%, #f59e0b 100%);
+    border-color: #fbbf24;
+    color: #111827;
+    font-weight: 700;
+    text-shadow: none;
+    box-shadow: 0 10px 22px rgba(245, 158, 11, 0.18);
+}
+.btn.btn-yellow:hover {
+    filter: brightness(1.03) saturate(1.05);
+}
+.btn.btn-yellow:active {
+    transform: translateY(1px);
+}
+
+/* Subtle accent for “open scheme editor” button (less loud than .btn-yellow) */
+.btn.btn-scheme {
+    background: rgba(251, 191, 36, 0.08);
+    border-color: rgba(251, 191, 36, 0.35);
+    color: #fbbf24;
+    font-weight: 600;
+    box-shadow: 0 10px 22px rgba(245, 158, 11, 0.10);
+}
+.btn.btn-scheme:hover {
+    filter: brightness(1.08) saturate(1.05);
+}
+
+#zarPatternHint:empty {
+    display: none;
+}
+
+.btn:hover {
+    filter: brightness(1.1)
+}
+
+.btn.btn-sm {
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+}
+
+select,
+input[type=text] {
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 12px
+}
+input[type=number] {
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    width: 88px;
+}
+
+/* Import offset group */
+.offsetCtrl {
+    display: flex;
+    flex-wrap: wrap; /* allow controls to break to next line */
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background: #0c1221;
+    border: 1px solid #263241;
+    border-radius: 10px;
+    max-width: 100%;
+}
+.offsetCtrl .caption {
+    margin-top: 0;
+}
+.offsetCtrl input[type=number] {
+    width: 86px;
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-variant-numeric: tabular-nums;
+}
+.offsetCtrl input[type=range] {
+    width: 100%;          /* fill remaining space within the group */
+    flex: 1 1 160px;      /* grow when there is room, shrink on narrow screens */
+    min-width: 140px;     /* keep it usable on very small widths */
+    accent-color: #60a5fa;
+}
+
+.lang {
+    display: flex;
+    gap: 8px;
+    align-items: center
+}
+
+.toggle {
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer
+}
+
+/* Comparison table container: allow it to grow and scroll on mobile */
+.cmpWrap {
+    /* Let the table grow vertically with the page; avoid inner vertical scrollbars */
+    overflow: visible;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    font-size: 14px
+}
+
+/* On very narrow screens, allow horizontal scrolling of the table rather than collapsing columns */
+.cmpWrap {
+    overflow-x: auto;
+}
+
+th {
+    color: #94a3b8;
+    font-weight: 600;
+    text-align: left;
+    padding: 4px 8px;
+    white-space: normal;
+    line-height: 1.15
+}
+
+#cmpTable thead th {
+    position: sticky;
+    top: 0;
+    background: #0b1222;
+    /* same as chart bg */
+    z-index: 1;
+}
+
+td {
+    padding: 10px 8px;
+    background: #0c1221;
+    border-top: 1px solid #263241;
+    border-bottom: 1px solid #263241;
+    vertical-align: top;
+    word-break: break-word;
+}
+
+td:first-child {
+    border-left: 1px solid #263241;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px
+}
+
+td:last-child {
+    border-right: 1px solid #263241;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px
+}
+
+/* Comparison table: highlight active method row + additionally shown methods */
+#cmpTable tbody tr.tzMethShown td {
+    background: rgba(255, 255, 255, 0.02);
+}
+#cmpTable tbody tr.tzMethActive td {
+    background: rgba(255, 255, 255, 0.04);
+}
+#cmpTable tbody tr.tzMethShown td:first-child {
+    border-left: 3px solid var(--tzMethColor, #263241);
+}
+#cmpTable tbody tr.tzMethActive td:first-child {
+    border-left-width: 6px;
+}
+#cmpTable tbody tr.tzMethActive td:first-child,
+#cmpTable tbody tr.tzMethActive td:last-child {
+    box-shadow: inset 0 0 0 1px var(--tzMethColor, #263241);
+}
+
+.pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px
+}
+
+.good {
+    background: rgba(34, 197, 94, .12);
+    border: 1px solid rgba(34, 197, 94, .5);
+    color: #86efac
+}
+
+.mid {
+    background: rgba(245, 158, 11, .12);
+    border: 1px solid rgba(245, 158, 11, .5);
+    color: #fcd34d
+}
+
+.bad {
+    background: rgba(239, 68, 68, .12);
+    border: 1px solid rgba(239, 68, 68, .5);
+    color: #fca5a5
+}
+
+.mono {
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px
+}
+
+@media print {
+    body {
+        background: #fff;
+        color: #000 !important;
+    }
+
+    /* Hide non-essential UI for print */
+    header,
+    .social-ribbon,
+    .toolbar,
+    #hZones,
+    #zones,
+    #modal,
+    #imodal,
+    .bigChart,
+    .bigLegend {
+        display: none !important;
+    }
+
+    .wrap {
+        max-width: clamp(1080px, 92vw, 1480px);
+        border: none
+    }
+
+    /* Ensure table wrapper doesn't clip in print */
+    .card div[style*="overflow:auto"] {
+        overflow: visible !important;
+    }
+
+    /* Reset sticky header for print to avoid truncation */
+    #cmpTable thead th {
+        position: static !important;
+        background: #fff !important;
+    }
+
+    /* Simplify layout and split pages */
+    .grid { display: block !important; }
+    /* Make each section full width */
+    .wrap.grid > section.card { width: 100% !important; }
+    /* Avoid splitting a card across pages */
+    .wrap.grid > section.card { page-break-inside: avoid; break-inside: avoid; }
+    /* Page 2: start chart card on a new page */
+    .wrap.grid > section.card:nth-of-type(2) { page-break-before: always; break-before: page; }
+    /* Page 3: the next grid (table) starts on a new page */
+    .wrap.grid + .wrap.grid > .card { page-break-before: always; break-before: page; }
+
+    table {
+        font-size: 12px;
+        color: #000 !important;
+        width: 100% !important;
+        table-layout: auto !important;
+    }
+
+    /* Make cells readable on white paper regardless of user agent background settings */
+    .card,
+    table,
+    th,
+    td {
+        background: #fff !important;
+        color: #000 !important;
+        border-color: #000 !important;
+        box-shadow: none !important;
+    }
+
+    /* Keep pill colors in the table */
+    #cmpTable .pill,
+    #cmpTable .good,
+    #cmpTable .mid,
+    #cmpTable .bad {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    th, td {
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+}
+
+/* modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .55);
+    z-index: 9999; /* ensure above any page header/social bar */
+    padding: 4vmin;
+    width: 100vw;
+    height: 100vh;
+}
+
+.modal.show {
+    display: flex
+}
+
+/* fullscreen override for modal (use class .fullscreen on .modal) */
+.modal.fullscreen {
+    padding: 0 !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+}
+.modal.fullscreen .modal-card {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: 0;
+    padding: 8px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+}
+@supports (height: 100dvh) {
+    .modal.fullscreen .modal-card { height: 100dvh; max-height: 100dvh; }
+}
+.modal.fullscreen .bigChart {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+}
+
+/* Zaruba big screen */
+.zarScreen {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: 0;
+    padding: 0;
+    position: relative;
+}
+
+.zarScreenMain {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 8px;
+    position: relative;
+}
+
+.zarScreenBottom {
+    flex: 0 0 auto;
+    padding: 8px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    position: relative;
+    z-index: 3;
+}
+
+.zarScreenPhase {
+    font-size: clamp(22px, 5.2vw, 54px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    opacity: 0.95;
+}
+
+
+.zarScreenTimer {
+    font-size: clamp(88px, 22vw, 320px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: #e5e7eb;
+    text-shadow: 0 6px 24px rgba(0,0,0,.45);
+}
+
+/* Zaruba Big Screen: interval progress bar (shrinks as the phase elapses) */
+.zarScreenIntervalBar {
+    width: min(520px, 86vw);
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.12);
+    margin: 8px auto 4px auto;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.zarScreenIntervalBarFill {
+    height: 100%;
+    width: 100%;
+    border-radius: 999px;
+    transition: width 120ms linear;
+    background: rgba(255,255,255,0.55);
+}
+
+.zarScreen.zs-work .zarScreenIntervalBarFill {
+    background: linear-gradient(90deg, rgba(34,197,94,0.95), rgba(16,185,129,0.85));
+}
+
+.zarScreen.zs-rest .zarScreenIntervalBarFill {
+    background: linear-gradient(90deg, rgba(59,130,246,0.95), rgba(14,165,233,0.85));
+}
+
+.zarScreen.zs-pulse .zarScreenIntervalBar {
+    box-shadow: 0 0 0 2px rgba(239,68,68,0.25), inset 0 0 0 1px rgba(255,255,255,0.08);
+
+}
+
+.zarScreenEff {
+    font-size: clamp(34px, 10vw, 120px);
+    font-weight: 850;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: #e5e7eb;
+    opacity: 0.92;
+    text-shadow: 0 5px 22px rgba(0,0,0,.42);
+}
+
+.zarScreenSub {
+    font-size: clamp(16px, 3.8vw, 34px);
+    color: #cbd5e1;
+    opacity: 0.9;
+    text-align: center;
+}
+
+.zarScreenReps {
+    font-size: clamp(56px, 14vw, 140px);
+    font-weight: 900;
+    line-height: 1;
+    color: #e2e8f0;
+    opacity: 0.96;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-shadow: 0 8px 28px rgba(0,0,0,.55);
+}
+
+.zarScreenRepsBox {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.35em;
+}
+
+.zarScreenRepsInterval {
+    opacity: 0.92;
+    transform: translateY(0.04em);
+    padding-left: 0.30em;
+    border-left: 2px solid rgba(148, 163, 184, 0.50);
+}
+
+/* Interval reps should be close to main size (≈70–80%), not parent-em sized */
+.zarScreenReps.zarScreenRepsInterval {
+    font-size: clamp(42px, 10.5vw, 108px);
+}
+
+/* Phase switch proximity cues */
+.zarScreen {
+    transition: background-color .15s ease;
+}
+
+.zarScreen.zs-work .zarScreenPhase { color: var(--zaruba); }
+.zarScreen.zs-rest .zarScreenPhase { color: #94a3b8; }
+
+
+@keyframes zsPulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.02); filter: brightness(1.12); }
+}
+
+/* Color is driven by JS (smooth gradient). Keep pulse as a separate class. */
+.zarScreen.zs-pulse .zarScreenTimer {
+    animation: zsPulse 0.45s ease-in-out infinite;
+}
+
+.zarScreenBtns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+/* Zaruba Big Screen: make bottom controls bigger (touch-friendly) */
+#zarScreenModal .zarScreenBtns .btn {
+    font-size: clamp(16px, 4.2vw, 26px);
+    padding: 14px 18px;
+    border-radius: 14px;
+    min-height: 52px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+#zarScreenModal .zarScreenBtns {
+    gap: 12px;
+}
+
+/* Zaruba Timer: Plan overlay */
+.zarPlanModal {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 14px;
+    background: rgba(0,0,0,0.68);
+    backdrop-filter: blur(3px);
+    overflow: auto;
+}
+
+.zarPlanCard {
+    width: min(980px, 100%);
+    max-height: calc(100svh - 28px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    background: rgba(15, 23, 42, 0.97);
+    box-shadow: 0 22px 60px rgba(0,0,0,.55);
+}
+
+@supports (height: 100dvh) {
+    .zarPlanCard { max-height: calc(100dvh - 28px); }
+}
+
+.zarPlanHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    flex: 0 0 auto;
+}
+
+.zarPlanTitle {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #e2e8f0;
+}
+
+.zarPlanBody {
+    padding: 10px 12px;
+    overflow: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.zarPlanTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+.zarPlanTable th,
+.zarPlanTable td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    text-align: left;
+    vertical-align: top;
+}
+
+.zarPlanTable th {
+    position: sticky;
+    top: 0;
+    background: rgba(15, 23, 42, 0.98);
+    color: #93c5fd;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.zarPlanTable td {
+    color: #e5e7eb;
+}
+
+.zarPlanTable td.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@media (max-width: 520px) {
+    .zarPlanTable th,
+    .zarPlanTable td {
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+}
+
+details.zarScreenSettings {
+    width: min(980px, 100%);
+    margin: 10px auto 0 auto;
+}
+
+details.zarScreenSettings > summary {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    justify-content: center;
+}
+
+details.zarScreenSettings[open] {
+    max-height: 42vh;
+    overflow: auto;
+}
+
+.zarScreenSettingsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Zaruba Big Screen: compact buttons in settings grid */
+#zarScreenModal .zarScreenSettingsGrid .btn.zarMiniBtn {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    min-height: 0;
+    line-height: 1.1;
+    font-weight: 800;
+    opacity: 0.92;
+}
+
+#zarScreenModal #zarScreenVibrateMulV {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+details.zarScreenSettings .ctrlBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Zaruba Big Screen: portrait-only (we intentionally do not support landscape layout) */
+.zarRotateHint {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(4px);
+    text-align: center;
+    padding: 18px;
+}
+.zarRotateHintBox {
+    border: 1px solid #243246;
+    background: rgba(11,18,34,.92);
+    border-radius: 16px;
+    padding: 16px 18px;
+    max-width: 520px;
+}
+.zarRotateHintTitle {
+    font-size: clamp(20px, 5vw, 34px);
+    font-weight: 850;
+    color: #e5e7eb;
+}
+.zarRotateHintSub {
+    margin-top: 6px;
+    font-size: clamp(14px, 3.6vw, 18px);
+    color: #cbd5e1;
+    opacity: 0.9;
+}
+
+@media (orientation: landscape) and (pointer: coarse) and (hover: none) {
+    #zarScreenModal .zarRotateHint { display: flex; }
+}
+
+.zarScreenCountdown {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(80px, 18vw, 200px);
+    font-weight: 900;
+    color: #fbbf24;
+    background: rgba(0,0,0,.35);
+    backdrop-filter: blur(2px);
+    text-shadow: 0 8px 28px rgba(0,0,0,.65);
+    pointer-events: none;
+}
+
+.modal-card {
+    background: #0b1222;
+    border: 1px solid #243246;
+    border-radius: 16px;
+    max-width: 96vw;
+    max-height: 92vh;
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+
+.modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.modal-title {
+    font-size: 16px;
+    margin: 0
+}
+
+.modal-close {
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer
+}
+
+.bigChart {
+    width: 100%;
+    height: 70vh;
+    background: #0b1222;
+    border: 1px solid #243246;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-out
+}
+
+@supports (height: 70dvh) {
+    .bigChart { height: 70dvh; }
+}
+
+.bigLegend {
+    font-size: 12px;
+    color: #cbd5e1;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap
+}
+.bigZones {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 6px 0 8px 0;
+}
+
+.infoIcon {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 6px;
+    line-height: 1.2;
+    border: 1px solid #263241;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #93c5fd;
+    background: #0c1221;
+    font-size: 11px
+}
+
+.infoIcon:hover {
+    filter: brightness(1.15)
+}
+
+/* info modal */
+.imodal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .55);
+    z-index: 60;
+    padding: 4vmin
+}
+
+.imodal.show {
+    display: flex
+}
+
+.imodal-card {
+    background: #0b1222;
+    border: 1px solid #243246;
+    border-radius: 16px;
+    max-width: 900px;
+    width: min(92vw, 900px);
+    max-height: 92vh;
+    padding: 16px;
+    overflow: auto
+}
+
+.imodal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px
+}
+
+.imodal-title {
+    margin: 0;
+    font-size: 16px
+}
+
+.imodal-close {
+    background: #0c1221;
+    border: 1px solid #263241;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer
+}
+
+.imodal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px
+}
+
+.imodal-card .ibox {
+    background: #0c1221;
+    border: 1px solid #263241;
+    border-radius: 12px;
+    padding: 12px
+}
+
+.disclaimer {
+    margin-top: 14px
+}
+
+header.wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.lang#langTop {
+    position: static;
+    /* was fixed */
+    top: auto;
+    right: auto;
+    z-index: auto;
+    margin-left: auto;
+    /* stays on the right within header */
+    background: #0c1221e0;
+    border: 1px solid #263241;
+    border-radius: 12px;
+    padding: 6px 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+}
+
+#cmpTable thead th {
+    position: sticky;
+    top: 0;
+    background: #0b1222;
+    /* same as chart bg */
+    z-index: 1;
+}
+
+details.ctrlGroup {
+    margin-top: 12px;
+}
+
+details.ctrlGroup>summary {
+    list-style: none;
+    background: #0c1221;
+    border: 1px solid #263241;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+    color: #cbd5e1;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+details.ctrlGroup>summary::-webkit-details-marker {
+    display: none;
+}
+
+.ctrlCaret {
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+    transition: transform .15s ease;
+}
+
+details.ctrlGroup[open] .ctrlCaret {
+    transform: rotate(0deg);
+}
+
+details.ctrlGroup:not([open]) .ctrlCaret {
+    transform: rotate(-90deg);
+}
+
+details.ctrlGroup .ctrlBody {
+    margin-top: 8px;
+}
+
+/* Social Ribbon Styles - Integrated with existing theme */
+.social-ribbon {
+    background: linear-gradient(135deg, var(--panel) 0%, var(--soft) 100%);
+    border: 1px solid var(--grid);
+    border-radius: 16px;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    grid-column: 1 / -1;
+}
+
+.social-ribbon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.08), transparent);
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.social-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.social-text {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--soft);
+    border: 1px solid #263241;
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: left 0.3s ease;
+}
+
+.social-link:hover::before {
+    left: 100%;
+}
+
+.social-link:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+    border-color: rgba(96, 165, 250, 0.4);
+    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
+}
+
+.social-link.youtube:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.social-link.telegram:hover {
+    border-color: rgba(52, 211, 153, 0.4);
+    box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
+}
+
+.social-link.telegram-chat:hover {
+    border-color: rgba(167, 139, 250, 0.4);
+    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+}
+
+.social-icon {
+    font-size: 14px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.social-label {
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+/* Tighten space below the social ribbon only for its wrapper */
+/* Ensure exact 4px gap below the ribbon (independent of default .wrap padding) */
+.wrap.social-wrap { padding-bottom: 0; }
+.wrap.social-wrap .social-ribbon { margin-bottom: 8px; margin-top:-10px }
+
+@media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .wrap { width: 100%; max-width: 100%; padding-left: 12px; padding-right: 12px; }
+    .chart { height: 46vh; }
+    /* Allow full-height table; scrolling happens on the page, not inside the wrapper */
+    .cmpWrap { max-height: none; }
+    header { flex-wrap: wrap; }
+    header .lang#langTop { margin-left: 0; }
+    .imodal-grid { grid-template-columns: 1fr; }
+    /* Big chart modal: go edge-to-edge and fill viewport */
+    .modal {
+        padding: 0;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: 100svh;
+        max-height: 100svh;
+        align-items: stretch;      /* fill instead of center-constraining */
+        justify-content: stretch;  /* fill instead of center-constraining */
+    }
+    @supports (height: 100dvh) {
+        .modal { height: 100dvh; max-height: 100dvh; }
+    }
+    .modal-card {
+        position: fixed;   /* ensure full-viewport even if parent constrains width */
+        inset: 0;
+        max-width: 100vw;
+        width: 100vw;
+        height: 100svh;
+        max-height: 100svh;
+        border-radius: 0;
+            border: 0;
+        padding: 8px; /* small internal pad to avoid content touching screen edges */
+        min-width: 0;
+        min-height: 0;
+        box-sizing: border-box;
+    }
+    @supports (height: 100dvh) {
+        .modal-card { height: 100dvh; max-height: 100dvh; }
+    }
+    .bigChart {
+        height: auto;
+        flex: 1 1 auto; /* fill remaining height in modal */
+        min-height: 50svh;
+        border-radius: 8px;
+        min-width: 0;
+    }
+
+    /* Floating Big Chart button */
+    .fab-big {
+        position: fixed;
+        right: 16px;
+        bottom: 18px;
+        z-index: 11000;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 1px solid #263241;
+        background: #0c1221;
+        color: #e5e7eb;
+        box-shadow: 0 6px 18px rgba(0,0,0,.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        cursor: pointer;
+    }
+    .modal.show ~ .fab-big { display: none; }
+    .zpm.show ~ .fab-big { display: none; }
+    .fab-scheme { bottom: 78px; }
+    .fab-timer { bottom: 138px; }
+    .offsetCtrl { width: 100%; } /* ensure the group uses full line on mobile */
+}
+@media (max-width: 640px) {
+    .social-ribbon {
+        padding: 8px 12px;
+    }
+
+    .social-links {
+        gap: 8px;
+    }
+
+    .social-link {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .social-text {
+        font-size: 12px;
+        margin-right: 4px;
+    }
+
+    .social-icon {
+        font-size: 13px;
+    }
+
+    .chart { height: 44vh; }
+    .cmpWrap { max-height: 68vh; }
+}

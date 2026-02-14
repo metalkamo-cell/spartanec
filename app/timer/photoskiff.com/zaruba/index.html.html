@@ -1,0 +1,923 @@
+<!doctype html>
+<html>
+
+
+<!-- Mirrored from photoskiff.com/zaruba/zone-comparator-2.0-schema.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 14 Feb 2026 04:42:28 GMT -->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover" />
+    <title>Training Method Comparator — Big Chart Popup</title>
+    <link rel="stylesheet" href="zone-comparator4879.css?v=2026-02-12-01" />
+    <script src="sim-corec086.js?v=2026-02-09-19"></script>
+    <script src="methodsfc29.js?v=2026-01-15-12"></script>
+    <script src="zone-summaryfc29.js?v=2026-01-15-12"></script>
+    <script src="fit-importfc29.js?v=2026-01-15-12"></script>
+    <script src="chartfc29.js?v=2026-01-15-12"></script>
+    <!-- Extracted modules: params and modals must load before main glue -->
+    <script src="params04c5.js?v=2026-02-09-21"></script>
+    <script src="modalsfc29.js?v=2026-01-15-12"></script>
+    <script src="zaruba-presets4879.js?v=2026-02-12-01"></script>
+    <script src="zone-comparator3827.js?v=2026-02-13-05"></script>
+    <script src="ai-brieffc29.js?v=2026-01-15-12"></script>
+</head>
+
+<body>
+    <header class="wrap">
+        <div>
+            <h1 id="ttl">Training Method Interactive Comparator (TMIC)<span class="ver">v2.0</span></h1>
+            <div class="ver" id="subttl">Compact panels · drift · Karvonen-linked sim · dynamic table · Zone3–4 &
+                Strength · CSV · Presets · Share/Print · Big chart</div>
+        </div>
+        <div class="lang" id="langTop">
+            <span id="langLab">Language:</span>
+            <button class="toggle" id="langBtn" onclick="toggleLang()">EN</button>
+        </div>
+    </header>
+
+    <!-- Social banner centered under the main title -->
+    <div class="wrap social-wrap">
+        <div class="social-ribbon">
+            <div class="social-links">
+                <a href="https://youtube.com/@photoskiff" target="_blank" class="social-link youtube" title="YouTube Channel">
+                    <span class="social-icon">📺</span>
+                    <span class="social-label">YouTube Photoskiff</span>
+                </a>
+                <a href="https://t.me/SeregaPhotoskiff" target="_blank" class="social-link telegram" title="Telegram Channel">
+                    <span class="social-icon">📢</span>
+                    <span class="social-label">Telegram Photoskiff</span>
+                </a>
+                <a href="https://t.me/SeregaPhotoskiffChat" target="_blank" class="social-link telegram-chat" title="Telegram Chat">
+                    <span class="social-icon">💬</span>
+                    <span class="social-label">Zaruba Chat</span>
+                </a>
+                <a id="helpLink" href="help-ru2139.html?lang=ru" class="social-link" title="Help">
+                    <span class="social-icon">❓</span>
+                    <span class="social-label" id="helpLabel">Help</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrap grid">
+        <section class="card">
+            <h2 id="hInputs">Inputs</h2>
+
+            <details class="ctrlGroup" id="detInputs" open>
+                <summary id="sumInputs"><span class="ctrlCaret">▾</span>Inputs</summary>
+                <div class="ctrlBody">
+                    <div class="row inputsRow">
+                        <div class="col">
+                            <label id="labTrimpSex">HR Load (TRIMP): sex</label>
+                            <span class="infoIcon" title="TRIMP formula and details" onclick="openInfo('TRIMP')">ℹ</span>
+                            <select id="trimpSex" onchange="render()">
+                                <option id="optTrimpM" value="m">Male</option>
+                                <option id="optTrimpF" value="f">Female</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label id="labAge">Age (y) <span class="val" id="ageV"></span></label>
+                            <input type="number" id="age" min="15" max="80" value="35" step="1" oninput="render()">
+                            <div class="caption" id="capMax">Max HR defaults to ≈ 220 − Age.</div>
+                        </div>
+            <div class="col">
+                <label id="labRest">Rest HR</label>
+                <input type="number" id="hrRest" value="55" min="35" max="120" oninput="render()">
+            </div>
+            <div class="col">
+                <label id="labMax">Max HR</label>
+                <input type="number" id="hrMax" placeholder="auto" oninput="render()">
+                <div class="caption" id="capHrMaxAuto" style="display:none"></div>
+                <label class="checks" style="margin-top:6px"><input type="checkbox" id="fitHrMax" onchange="render()"><span id="labFitHrMax">Help estimate HRmax from this workout</span></label>
+                <div class="caption" id="capFitHrMax">Off = keep my HRmax; on = show HRmax fitting details</div>
+            </div>
+            <div class="col">
+                <label id="labSportLevel">HRmax formula</label>
+                <select id="sportLevel" onchange="render()">
+                    <option id="optSLGeneral" value="general">General (220 − age)</option>
+                    <option id="optSLTanaka" value="tanaka">Active (Tanaka: 208 − 0.7×age)</option>
+                    <option id="optSLGellish" value="gellish">Trained (Gellish: 207 − 0.7×age)</option>
+                </select>
+            </div>
+            <div class="col">
+                <label id="labBodyWeight"></label>
+                <input type="number" id="bodyWeight" value="75" min="35" max="200" oninput="render()">
+            </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label id="labHRR">Use Karvonen (HRR) formula for zones & targets</label>
+                            <label class="checks"><input type="checkbox" id="useHRR" checked
+                                    onchange="render();updatePercentLabels()"><span id="labHRRShort">Karvonen
+                                    HRR</span></label>
+                        </div>
+                        <div class="col">
+                            <label id="labActivity">Activity</label>
+                            <select id="activity" onchange="render()">
+                                <option id="optActKb" value="kb">Kettlebells</option>
+                                <option id="optActRun" value="run">Running</option>
+                                <option id="optActBike" value="bike">Bike trainer</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col">
+                            <label id="labDrift">Global HR drift (bpm per 10 min) <span class="val"
+                                    id="driftV"></span></label>
+                            <input type="range" id="drift10" min="0" max="10" value="2" step="0.5" oninput="render()">
+                        </div>
+                        
+                    </div>
+
+                    <!-- Advanced kinetics stays inside Inputs group -->
+                    <details class="ctrlGroup" id="detAdv">
+                        <summary id="sumAdv"><span class="ctrlCaret">▾</span>Global kinetics (advanced)</summary>
+                        <div class="ctrlBody">
+                            <div class="row">
+                                <div class="col">
+                                    <label id="labTauOn">Tau ON (sec) <span class="val" id="tauOnV"></span></label>
+                                    <input type="range" id="tauOn" min="15" max="35" step="1" value="25"
+                                        oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labTauOff">Tau OFF (sec) <span class="val" id="tauOffV"></span></label>
+                                    <input type="range" id="tauOff" min="25" max="55" step="1" value="35"
+                                        oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labWarm">Warm-up (min) <span class="val" id="warmV"></span></label>
+                                    <input type="range" id="warmup" min="0" max="15" step="1" value="0"
+                                        oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labCool">Cool-down (min) <span class="val" id="coolV"></span></label>
+                                    <input type="range" id="cooldown" min="0" max="10" step="1" value="5"
+                                        oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labPost">Post-rest (min) <span class="val" id="postV"></span></label>
+                                            <input type="range" id="postRest" min="0" max="30" step="1" value="3"
+                                        oninput="render()">
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </details>
+
+            <h2 style="margin-top:16px" id="hShown">Displayed methods</h2>
+            <div class="row" style="gap:8px; align-items:center; flex-wrap:wrap;">
+                <div class="dropdown" id="methodDropdown" style="position:relative;">
+                    <button class="btn" id="methodDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">Select methods…</button>
+                    <div class="card" id="methodDropdownMenu" style="display:none; position:absolute; z-index:1000; min-width:240px; padding:10px; margin-top:6px; background: rgba(10,16,28,0.98); border: 1px solid #1f2937; border-radius: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.4); backdrop-filter: blur(2px);">
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="msit" /> <span id="labMSIT" style="color:var(--sit)">SIT</span></label>
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="mhiit" /> <span id="labMHIIT" style="color:var(--hiit)">HIIT</span></label>
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="mzar" /> <span id="labMZRB" style="color:var(--zaruba)">Zaruba</span></label>
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="msn" /> <span id="labMSN" style="color:var(--sn)">Snatch (KB)</span></label>
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="msw" /> <span id="labMSW" style="color:var(--sn)">Swings (KB)</span></label>
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="mz2" /> <span id="labMZ2" style="color:var(--z2)">Zone 2</span></label>
+                        <label style="display:block; margin:4px 0;"><input type="checkbox" id="mz34" /> <span id="labMZ34" style="color:var(--z34)">Zone 3–4</span></label>
+                    </div>
+                </div>
+                <span class="caption" id="methodSelectedHint" style="opacity:.8"></span>
+            </div>
+
+            <!-- Legacy method checkboxes removed; method selection is controlled via the dropdown above -->
+            <!-- Compact method editor: dropdown to pick one method to edit -->
+            <h2 style="margin-top:16px" id="hConfig">Configure</h2>
+            <div class="row" style="gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+                <label id="labEditMethod" style="min-width:120px">Edit method</label>
+                <select id="editMethodSel" style="min-width:220px">
+                    <option value="SIT">SIT</option>
+                    <option value="HIIT">HIIT</option>
+                    <option value="ZRB">Zaruba</option>
+                    <option value="SN">Snatch (KB)</option>
+                    <option value="SW">Swings (KB)</option>
+                    <option value="Z2">Zone 2</option>
+                    <option value="Z34">Zone 3–4</option>
+                </select>
+                <span class="caption" id="editHint" style="opacity:.8"></span>
+            </div>
+
+            <div class="ctrlGroup" id="ctlIntervals">
+                <div class="ctrlBody">
+                    <div class="row">
+                        <div class="col card" id="cardSIT" data-method="SIT" style="position:relative;">
+                            <h2 id="hSIT" style="margin-top:0">SIT</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlySIT" data-m="SIT" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showSIT" data-m="SIT" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideSIT" data-m="SIT" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labSitW">Work (s) <span class="val" id="sitWorkV"></span></label><input
+                                type="range" id="sitWork" min="10" max="60" step="1" value="30" oninput="render()">
+                            <label id="labSitR">Rest (s) <span class="val" id="sitRestV"></span></label><input
+                                type="range" id="sitRest" min="60" max="360" step="5" value="180" oninput="render()">
+                            <label id="labSitN">Intervals <span class="val" id="sitNV"></span></label><input
+                                type="range" id="sitN" min="1" max="12" step="1" value="6" oninput="render()">
+                            <label id="labSitEff">Effort (RPE) <span class="val" id="sitEffV"></span></label><input
+                                type="range" id="sitEff" min="0" max="10" step="0.1" value="9.5" oninput="render()">
+                        </div>
+                        <div class="col card" id="cardHIIT" data-method="HIIT" style="position:relative;">
+                            <h2 id="hHIIT" style="margin-top:0">HIIT</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlyHIIT" data-m="HIIT" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showHIIT" data-m="HIIT" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideHIIT" data-m="HIIT" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labHiitW">Work (s) <span class="val" id="hiitWorkV"></span></label><input
+                                type="range" id="hiitWork" min="20" max="180" step="5" value="60" oninput="render()">
+                            <label id="labHiitR">Rest (s) <span class="val" id="hiitRestV"></span></label><input
+                                type="range" id="hiitRest" min="10" max="180" step="5" value="60" oninput="render()">
+                            <label id="labHiitRestEff">Rest intensity (RPE) <span class="val" id="hiitRestEffV"></span></label><input
+                                type="range" id="hiitRestEff" min="0" max="10" step="0.1" value="0.0" oninput="render()">
+                            <label id="labHiitN">Intervals <span class="val" id="hiitNV"></span></label><input
+                                type="range" id="hiitN" min="1" max="30" step="1" value="10" oninput="render()">
+                            <label id="labHiitEff">Effort (RPE) <span class="val" id="hiitEffV"></span></label><input
+                                type="range" id="hiitEff" min="6" max="10" step="0.1" value="8.5" oninput="render()">
+                        </div>
+                        <div class="col card" id="cardZRB" data-method="ZRB" style="position:relative;">
+                            <h2 id="hZRB" style="margin-top:0">Zaruba</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlyZRB" data-m="ZRB" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showZRB" data-m="ZRB" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideZRB" data-m="ZRB" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labZarMode">Mode</label>
+                            <select id="zarMode">
+                                <option id="optZarClassic" value="classic">Classic</option>
+                                <option id="optZarUniversal" value="universal">Universal</option>
+                            </select>
+                            <div id="zarClassicBox" class="zarModeBox" style="margin-top:8px">
+                                <label id="labZarDurC">Duration <span class="val" id="zarDurVC"></span></label><input
+                                    type="range" id="zarDurC" min="180" max="480" step="10" value="300" oninput="render()">
+                                <label id="labZarOnC">On (s) <span class="val" id="zarOnVC"></span></label><input
+                                    type="range" id="zarOnC" min="10" max="50" step="1" value="30" oninput="render()">
+                                <label id="labZarOffC">Off (s) <span class="val" id="zarOffVC"></span></label><input
+                                    type="range" id="zarOffC" min="10" max="40" step="1" value="30" oninput="render()">
+                                <label id="labZarEffC">Effort (RPE) <span class="val" id="zarEffVC"></span></label><input
+                                    type="range" id="zarEffC" min="6" max="10" step="0.1" value="8.5" oninput="render()">
+                                <input type="hidden" id="zarPatternC" value="">
+                            </div>
+
+                            <div id="zarUniversalBox" class="zarModeBox" style="margin-top:8px; display:none">
+                                <label id="labZarDurU">Duration <span class="val" id="zarDurVU"></span></label><input
+                                    type="range" id="zarDurU" min="60" max="3600" step="30" value="300" oninput="render()">
+                                <label id="labZarOnU">On (s) <span class="val" id="zarOnVU"></span></label><input
+                                    type="range" id="zarOnU" min="30" max="600" step="30" value="30" oninput="render()">
+                                <label id="labZarOffU">Off (s) <span class="val" id="zarOffVU"></span></label><input
+                                    type="range" id="zarOffU" min="0" max="360" step="30" value="30" oninput="render()">
+                                <label id="labZarEffU">Intensity (0–10) <span class="val" id="zarEffVU"></span></label><input
+                                    type="range" id="zarEffU" min="0" max="10" step="0.1" value="5.0" oninput="render()">
+                                <label id="labZarKinU">Kinetics</label>
+                                <select id="zarKinU" oninput="render()">
+                                    <option id="optZarKinHiit" value="hiit">HIIT-like</option>
+                                    <option id="optZarKinSit" value="sit">SIT-like</option>
+                                </select>
+                                <label id="labZarRestEffU">Rest intensity (RPE) <span class="val" id="zarRestEffVU"></span></label><input
+                                    type="range" id="zarRestEffU" min="0" max="10" step="0.1" value="0.0" oninput="render()">
+                                <input type="hidden" id="zarPatternU" value="">
+                            </div>
+
+                            <div class="caption" id="zarHint">Competition-style intervals: configure On/Off and rounds</div>
+                            <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                                <button class="btn" id="btnZarOptimize" onclick="optimizeZarubaDur()">Optimize</button>
+                                <span class="mono" id="zarPatBadge" style="opacity:.6">—</span>
+                                <span class="caption" id="zarPatternHint" style="opacity:.75"></span>
+                                <button class="btn btn-scheme" id="btnZarPattern" type="button" title="Open pattern editor">Edit</button>
+                                <button class="btn" id="btnZarCopy" type="button">Copy</button>
+                                <button class="btn" id="btnZarClear" type="button">Clear</button>
+                                <button class="btn" id="btnZarEmom" onclick="setZarEmomPreset()">Preset 30/30</button>
+                            </div>
+
+                            <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                                <span class="caption" id="labZarTarget">Target reps:</span>
+                                <input type="number" id="zarTargetReps" min="1" max="999" step="1" value="100" style="width:90px" oninput="render()" />
+                                <button class="btn" id="btnZarTarget" onclick="optimizeZarubaForTarget()">Plan for target</button>
+                                <span class="caption" id="zarTargetMsg" style="opacity:.85"></span>
+                            </div>
+
+                            <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                                <span class="caption" id="labZarBeeper">Beeper:</span>
+                                <button class="btn" id="btnZarBeepStart" type="button" onclick="startZarBeeper()">Start</button>
+                                <button class="btn" id="btnZarBeepStop" type="button" onclick="stopZarBeeper()" disabled>Stop</button>
+                                <button class="btn btn-yellow" id="btnZarBigScreen" type="button" onclick="openZarBigScreen()">Zaruba Timer</button>
+                                <span class="caption" id="zarBeepStatus" style="opacity:.8"></span>
+                            </div>
+                            <div class="caption" id="zarPatHint" style="margin-top:4px"></div>
+                            <div class="caption mono" id="zarPatPreview" style="margin-top:2px;opacity:.8"></div>
+                            <div class="caption" id="zarRepsEst" style="margin-top:6px; opacity:.9"></div>
+
+                            <details class="ctrlGroup" id="detZarOpt" style="margin-top:10px">
+                                <summary id="sumZarOpt"><span class="ctrlCaret">▾</span><span id="labZarOpt">Optimizer</span></summary>
+                                <div class="ctrlBody">
+                                    <div class="row inputsRow">
+                                        <div class="col">
+                                            <label id="labZarOptAllOut">All-out sustain (sec)</label>
+                                            <input type="number" id="zarOptAllOut" min="10" max="240" step="5" value="45" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptCad">Cadence @ max (rpm)</label>
+                                            <input type="number" id="zarOptCad" min="5" max="60" step="1" value="20" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptTempoMin">Tempo min (% of max)</label>
+                                            <input type="number" id="zarOptTempoMin" min="40" max="100" step="5" value="70" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptTempoSteps">Tempo variants</label>
+                                            <input type="number" id="zarOptTempoSteps" min="1" max="9" step="1" value="5" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptRec">Recovery tau (sec)</label>
+                                            <input type="number" id="zarOptRec" min="5" max="180" step="1" value="30" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptSwitch">Switch cost (sec)</label>
+                                            <input type="number" id="zarOptSwitch" min="0" max="5" step="1" value="1" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptTempoPow">Tempo fatigue exponent <span class="val" id="zarOptTempoPowV">1.4</span></label>
+                                            <input type="range" id="zarOptTempoPow" min="0.5" max="3" step="0.05" value="1.4" oninput="try{document.getElementById('zarOptTempoPowV').textContent=(+this.value).toFixed(2);}catch(_){ } render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptTempoSustainPow">Tempo sustain cap exponent <span class="val" id="zarOptTempoSustainPowV">3.0</span></label>
+                                            <input type="range" id="zarOptTempoSustainPow" min="1" max="8" step="0.25" value="3.0" oninput="try{document.getElementById('zarOptTempoSustainPowV').textContent=(+this.value).toFixed(2);}catch(_){ } render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptCycles">Cycles (0=auto)</label>
+                                            <input type="number" id="zarOptCycles" min="0" max="20" step="1" value="0" oninput="render()">
+                                        </div>
+                                        <div class="col">
+                                            <label id="labZarOptFinish">Finish sprint (sec, 0=off)</label>
+                                            <input type="number" id="zarOptFinish" min="0" max="60" step="1" value="20" oninput="render()">
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                                        <button class="btn btn-sm" id="btnZarOptAuto" type="button">Auto</button>
+                                    </div>
+                                    <div class="caption" id="zarOptPreview" style="margin-top:6px; opacity:.85"></div>
+                                </div>
+                            </details>
+                        </div>
+                        <div class="col card" id="cardSN" data-method="SN" style="position:relative; display:none;">
+                            <h2 id="hSN" style="margin-top:0">Snatch (KB)</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlySN" data-m="SN" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showSN" data-m="SN" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideSN" data-m="SN" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labSnMin">Duration (min) <span class="val" id="snMinV"></span></label>
+                            <input type="range" id="snMin" min="1" max="30" step="1" value="10" oninput="render()">
+                            <div class="row-tight">
+                                <div class="col">
+                                    <label id="labSnWeight">Bell weight (kg) <span class="val" id="snWeightV"></span></label>
+                                    <input type="range" id="snWeight" min="4" max="50" step="1" value="16" oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labSnCad">Cadence (rpm) <span class="val" id="snCadV"></span></label>
+                                    <input type="range" id="snCad" min="5" max="35" step="1" value="20" oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labSnProt">Protocol</label>
+                                    <select id="snProt" onchange="render()">
+                                        <option id="optSnClassic" value="classic">Classical (1 change)</option>
+                                        <option id="optSnArmy" value="army">Army (free changes)</option>
+                                    </select>
+                                </div>
+                                <div class="col" id="snChangeWrap">
+                                    <label id="labSnChange">Change at (min)</label>
+                                    <input type="number" id="snChangeMin" min="1" max="15" step="0.5" value="5" oninput="render()">
+                                </div>
+                            </div>
+                            <div class="caption" id="snHint" style="margin-top:6px; opacity:.8"></div>
+                        </div>
+                        <div class="col card" id="cardSW" data-method="SW" style="position:relative; display:none;">
+                            <h2 id="hSW" style="margin-top:0">Swings (KB)</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlySW" data-m="SW" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showSW" data-m="SW" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideSW" data-m="SW" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labSwMin">Duration (min) <span class="val" id="swMinV"></span></label>
+                            <input type="range" id="swMin" min="1" max="30" step="1" value="14" oninput="render()">
+                            <label id="labSwEff">Effort (RPE) <span class="val" id="swEffV"></span></label>
+                            <input type="range" id="swEff" min="2" max="10" step="0.1" value="8.5" oninput="render()">
+                            <div class="row-tight">
+                                <div class="col">
+                                    <label id="labSwWeight">Bell weight (kg) <span class="val" id="swWeightV"></span></label>
+                                    <input type="range" id="swWeight" min="4" max="50" step="1" value="20" oninput="render()">
+                                </div>
+                                <div class="col">
+                                    <label id="labSwStyle">Style</label>
+                                    <select id="swStyle" onchange="render()">
+                                        <option id="optSwStyleUniversal" value="universal">Universal (flex)</option>
+                                        <option id="optSwStyleChest1H" value="chest1h">Chest-height (1H)</option>
+                                        <option id="optSwStyleOverhead2H" value="overhead2h">Overhead (2H)</option>
+                                    </select>
+                                </div>
+                                <div class="col" id="swProtWrap">
+                                    <label id="labSwProt">Protocol</label>
+                                    <select id="swProt" onchange="render()">
+                                        <option id="optSwClassic" value="classic">Classical (1 change)</option>
+                                        <option id="optSwArmy" value="army">Army (free changes)</option>
+                                    </select>
+                                </div>
+                                <div class="col" id="swChangeWrap">
+                                    <label id="labSwChange">Change at (min)</label>
+                                    <input type="number" id="swChangeMin" min="1" max="15" step="0.5" value="7" oninput="render()">
+                                </div>
+                            </div>
+                            <div class="caption" id="swHint" style="margin-top:6px; opacity:.8"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ctrlGroup" id="ctlSteady">
+                <div class="ctrlBody">
+                    <div class="row">
+                        <div class="col card" id="cardZ2" data-method="Z2" style="position:relative;">
+                            <h2 id="hZ2" style="margin-top:0">Zone 2</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlyZ2" data-m="Z2" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showZ2" data-m="Z2" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideZ2" data-m="Z2" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labZ2Min">Duration (min) <span class="val" id="z2MinV"></span></label><input
+                                type="range" id="z2Min" min="10" max="180" step="5" value="40" oninput="render()">
+                            <label id="labZ2Frac">Target (% HRR) <span class="val" id="z2FracV"></span></label><input
+                                type="range" id="z2Frac" min="55" max="75" step="1" value="65" oninput="render()">
+                        </div>
+                        <div class="col card" id="cardZ34" data-method="Z34" style="position:relative;">
+                            <h2 id="hZ34" style="margin-top:0">Zone 3–4</h2>
+                            <button class="btn btn-sm onlyMethodBtn" id="onlyZ34" data-m="Z34" title="Hide others" style="position:absolute; top:8px; right:92px; display:none;">Hide others</button>
+                            <button class="btn btn-sm showMethodBtn" id="showZ34" data-m="Z34" title="Show on chart" style="position:absolute; top:8px; right:8px;">Show</button>
+                            <button class="btn btn-sm hideMethodBtn" id="hideZ34" data-m="Z34" title="Remove from chart" style="position:absolute; top:8px; right:8px; display:none;">Hide</button>
+                            <label id="labZ34Min">Duration (min) <span class="val" id="z34MinV"></span></label><input
+                                type="range" id="z34Min" min="10" max="90" step="5" value="30" oninput="render()">
+                            <label id="labZ34Frac">Target (% HRR) <span class="val" id="z34FracV"></span></label><input
+                                type="range" id="z34Frac" min="70" max="90" step="1" value="75" oninput="render()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <!-- Primary actions -->
+                <button class="btn btn-yellow" id="btnBig" onclick="openBigChart()">Big chart</button>
+                <button class="btn" id="btnScheme" type="button">Scheme…</button>
+                <button class="btn" id="btnTimer" type="button">Timer</button>
+                <!-- AI dropdown -->
+                <div class="dropdown" id="aiDropdown" style="position:relative;">
+                    <button class="btn" id="aiDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">AI</button>
+                    <div class="card" id="aiDropdownMenu" style="display:none; position:absolute; z-index:1000; min-width:280px; padding:10px; margin-top:6px; background: rgba(10,16,28,0.98); border: 1px solid #1f2937; border-radius: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.4); backdrop-filter: blur(2px);">
+                        <div class="caption" id="aiMenuHint" style="opacity:.85; margin:2px 0 8px 0;">Prompt + data file (not AI-generated output)</div>
+                        <button class="btn w100" id="btnAIBrief" onclick="exportAIBrief(false)" title="LLM analysis prompt + data">AI analysis brief</button>
+                        <button class="btn w100" id="btnAIBriefDetailed" onclick="exportAIBrief(true)" title="More data: per-minute aggregates and larger samples">Detailed</button>
+                    </div>
+                </div>
+
+                <!-- Export dropdown -->
+                <div class="dropdown" id="exportDropdown" style="position:relative;">
+                    <button class="btn" id="exportDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">Export</button>
+                    <div class="card" id="exportDropdownMenu" style="display:none; position:absolute; z-index:1000; min-width:240px; padding:10px; margin-top:6px; background: rgba(10,16,28,0.98); border: 1px solid #1f2937; border-radius: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.4); backdrop-filter: blur(2px);">
+                        <button class="btn w100" id="btnCSV1" onclick="exportMetricsCSV()">Export CSV (metrics)</button>
+                        <button class="btn w100" id="btnCSV2" onclick="exportSeriesCSV()">Export CSV (series)</button>
+                        <button class="btn w100" id="btnPNG" onclick="exportChartPNG()">Export chart (PNG)</button>
+                    </div>
+                </div>
+
+                <!-- Share dropdown -->
+                <div class="dropdown" id="shareDropdown" style="position:relative;">
+                    <button class="btn" id="shareDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">Share</button>
+                    <div class="card" id="shareDropdownMenu" style="display:none; position:absolute; z-index:1000; min-width:220px; padding:10px; margin-top:6px; background: rgba(10,16,28,0.98); border: 1px solid #1f2937; border-radius: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.4); backdrop-filter: blur(2px);">
+                        <button class="btn w100" id="btnShare" onclick="copyStateLink()">Copy state link</button>
+                        <button class="btn w100" id="btnShareScheme" onclick="copyZarSchemeLink()">Copy scheme link</button>
+                        <button class="btn w100" id="btnStateExport" type="button" onclick="exportStateToDisk()">Save state (JSON)</button>
+                        <button class="btn w100" id="btnStateImport" type="button" onclick="importStateFromDisk()">Load state (JSON)</button>
+                        <input type="file" id="stateFileInput" accept=".json,application/json" style="display:none" />
+                        <button class="btn w100" id="btnPrint" onclick="printTable()">Print table (PDF)</button>
+                    </div>
+                </div>
+
+                <!-- Presets dropdown -->
+                <div class="dropdown" id="presetsDropdown" style="position:relative;">
+                    <button class="btn" id="presetsDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">Presets</button>
+                    <div class="card" id="presetsDropdownMenu" style="display:none; position:absolute; z-index:1000; min-width:340px; padding:10px; margin-top:6px; background: rgba(10,16,28,0.98); border: 1px solid #1f2937; border-radius: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.4); backdrop-filter: blur(2px);">
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+                            <select id="presetList" style="min-width:200px"></select>
+                            <div id="currentPresetLabel" class="caption" style="opacity:.8">Current preset: Default</div>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="text" id="presetName" placeholder="Preset name" style="flex:1 1 140px">
+                            <button class="btn" id="btnSave" onclick="savePreset()">Save preset</button>
+                            <button class="btn" id="btnSaveNew" onclick="savePresetNew()">Save as new</button>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                            <button class="btn" id="btnLoad" onclick="loadPreset()">Load</button>
+                            <button class="btn" id="btnDel" onclick="deletePreset()">Delete</button>
+                            <button class="btn" id="btnReset" onclick="resetToDefaults()">Reset to defaults</button>
+                        </div>
+
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px solid rgba(31,41,55,0.8)">
+                            <button class="btn" id="btnPresetsExport" type="button" onclick="exportPresetsToDisk()">Save presets (JSON)</button>
+                            <button class="btn" id="btnPresetsImport" type="button" onclick="importPresetsFromDisk()">Load presets (JSON)</button>
+                            <input type="file" id="presetsFileInput" accept=".json,application/json" style="display:none" />
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                            <button class="btn" id="btnPresetExportOne" type="button" onclick="exportPresetToDisk()">Save selected preset</button>
+                            <button class="btn" id="btnPresetImportOne" type="button" onclick="importPresetFromDisk()">Load preset</button>
+                            <input type="file" id="presetFileInput" accept=".json,application/json" style="display:none" />
+                        </div>
+                        <div class="caption" id="presetDiskStatus" style="opacity:.78; margin-top:6px"></div>
+                    </div>
+                </div>
+
+                <!-- Import dropdown -->
+                <div class="dropdown" id="importDropdown" style="position:relative;">
+                    <button class="btn" id="importDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">Import</button>
+                    <div class="card" id="importDropdownMenu" style="display:none; position:absolute; z-index:1000; min-width:360px; padding:10px; margin-top:6px; background: rgba(10,16,28,0.98); border: 1px solid #1f2937; border-radius: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.4); backdrop-filter: blur(2px);">
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <button class="btn" id="btnImport" type="button">Import HR (CSV/FIT)</button>
+                            <button class="btn" id="btnClearImports" type="button">Clear imports</button>
+                            <input type="file" id="fileImport" accept=".csv,.CSV,.txt,.fit,.FIT" style="display:none" />
+                        </div>
+                        <div class="offsetCtrl" role="group" aria-labelledby="impOffLab" style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                            <span class="caption" id="impOffLab">Import offset (s):</span>
+                            <button class="btn btn-sm" id="impMinus10" type="button" title="-10s">−10</button>
+                            <button class="btn btn-sm" id="impMinus1" type="button" title="-1s">−1</button>
+                            <input type="number" id="impOffset" value="0" step="1" min="-3600" max="3600" inputmode="numeric" />
+                            <button class="btn btn-sm" id="impPlus1" type="button" title="+1s">+1</button>
+                            <button class="btn btn-sm" id="impPlus10" type="button" title="+10s">+10</button>
+                            <button class="btn btn-sm" id="impZero" type="button" title="Reset to 0">0</button>
+                            <input type="range" id="impOffsetRange" min="-300" max="300" step="1" value="0" aria-label="Import offset slider" style="flex:1 1 140px; min-width:140px;">
+                        </div>
+                        <!-- Trim-from-start controls -->
+                        <div class="offsetCtrl" role="group" aria-labelledby="impTrimLab" style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                            <span class="caption" id="impTrimLab">Trim start (s):</span>
+                            <button class="btn btn-sm" id="impTrimAuto" type="button" title="Auto-detect workout start">Auto</button>
+                            <input type="number" id="impTrimStart" value="0" step="1" min="0" max="36000" inputmode="numeric" />
+                            <button class="btn btn-sm" id="impTrimClear" type="button" title="Clear trim">Clear</button>
+                            <input type="range" id="impTrimRange" min="0" max="600" step="1" value="0" aria-label="Trim start slider" style="flex:1 1 140px; min-width:140px;">
+                            <label class="checks" style="margin-left:6px"><input type="checkbox" id="impTrimAffectsChart" checked /><span id="impTrimAffectsChartLab">Apply to chart</span></label>
+                            <button class="btn btn-sm" id="impAlign0" type="button" title="Align start to 0s">Align 0s</button>
+                        </div>
+
+                        <div id="importQuality" role="status" aria-live="polite" class="caption" style="margin-top:10px; padding:8px; border:1px solid #1f2937; border-radius:10px; background: rgba(255,255,255,0.02); display:none"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 id="hZones">Computed zones (bpm)</h2>
+            <div class="zones" id="zones"></div>
+            <div style="height:10px"></div>
+            <h2 id="hChart">HR chart</h2>
+            <div class="chart" id="chart" title="Click to open big chart"></div>
+            <div class="legend" id="legend"></div>
+            <div class="caption" id="capChart">X = longest selected session. Y labeled. Drift applies to all series.
+            </div>
+            <button class="btn" id="showSummaryBtn" type="button" style="margin:12px 0;">Show summary</button>
+        </section>
+    </div>
+
+    <div class="wrap grid" style="margin-top:14px">
+        <section class="card full">
+            <h2 id="hTable">Comparison (dynamic)</h2>
+            <div class="cmpWrap" id="cmpWrap">
+                <table id="cmpTable">
+                    <thead>
+                        <tr>
+                            <th id="thMethod"></th>
+                            <th class="mono" id="thTypical"></th>
+                            <th class="mono" id="thTime"></th>
+                            <th class="mono" id="thWR"></th>
+                            <th id="thHRR"></th>
+                            <th id="thFast"></th>
+                            <th id="thBDNF"></th>
+                            <th id="thCort"></th>
+                            <th id="thCardio"></th>
+                            <th id="thInjury"></th>
+                            <th id="thEff"></th>
+                            <th class="mono" id="thLoad"></th>
+                            <th class="mono" id="thZLoad"></th>
+                            <th class="mono" id="thCalories"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblBody"></tbody>
+                </table>
+            </div>
+            <div class="caption" id="capPol">Polarity colors: green = good, red = bad. Karvonen toggle affects
+                simulation.</div>
+        </section>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="bigTitle">
+            <div class="modal-head">
+                <h3 class="modal-title" id="bigTitle">Big chart</h3>
+                <button class="modal-close" id="closeModal" aria-label="Close">✕</button>
+            </div>
+            <div class="bigZones" id="bigZones"></div>
+            <div class="bigChart" id="bigChart"></div>
+            <div class="bigLegend" id="bigLegend"></div>
+            <div class="caption" id="bigCap">Click outside or press Esc to close</div>
+        </div>
+    </div>
+
+    <!-- ZARUBA BIG SCREEN (fullscreen timer) -->
+    <div class="modal fullscreen" id="zarScreenModal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="zarScreenTitle">
+            <div class="modal-head">
+                <h3 class="modal-title" id="zarScreenTitle">Zaruba Timer</h3>
+                <button class="modal-close" id="zarScreenClose" aria-label="Close">✕</button>
+            </div>
+            <div class="zarScreen" id="zarScreen">
+                <div class="zarRotateHint" id="zarRotateHint" aria-hidden="true">
+                    <div class="zarRotateHintBox">
+                        <div class="zarRotateHintTitle" id="zarRotateHintTitle">Rotate to portrait</div>
+                        <div class="zarRotateHintSub" id="zarRotateHintSub">Timer is portrait-only</div>
+                    </div>
+                </div>
+                <div class="zarScreenMain" id="zarScreenMain">
+                    <div class="zarScreenCountdown" id="zarScreenCountdown" style="display:none">3</div>
+                    <div class="zarScreenRepsBox" id="zarScreenRepsBox" style="display:none">
+                        <div class="zarScreenReps" id="zarScreenReps"></div>
+                        <div class="zarScreenReps zarScreenRepsInterval" id="zarScreenRepsInterval" style="display:none"></div>
+                    </div>
+                    <div class="zarScreenPhase" id="zarScreenPhase">—</div>
+                    <div class="zarScreenIntervalBar" id="zarScreenIntervalBar" aria-hidden="true" style="display:none">
+                        <div class="zarScreenIntervalBarFill" id="zarScreenIntervalBarFill"></div>
+                    </div>
+                    <div class="zarScreenTimer" id="zarScreenTimer">05:00</div>
+                    <div class="zarScreenEff" id="zarScreenEff" style="display:none">—</div>
+                    <div class="zarScreenSub" id="zarScreenSub"></div>
+                    <div class="caption mono" id="zarScreenTempo" style="opacity:.85"></div>
+                </div>
+
+                <div class="zarScreenBottom" id="zarScreenBottom">
+                    <div class="zarScreenBtns">
+                        <button class="btn" id="zarScreenStart" type="button">Start</button>
+                        <button class="btn" id="zarScreenPlan" type="button">Plan</button>
+                        <button class="btn" id="zarScreenStop" type="button" disabled>Stop</button>
+                    </div>
+
+                    <details class="ctrlGroup zarScreenSettings" id="zarScreenSettings">
+                        <summary id="sumZarScreenSettings"><span class="ctrlCaret">▾</span><span id="labZarScreenSettings">Settings</span></summary>
+                        <div class="ctrlBody">
+                            <div class="zarScreenSettingsGrid">
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;">
+                                    <input type="checkbox" id="zarScreenCountUp" onchange="zarScreenTimerToggleChanged()" />
+                                    <span id="labZarScreenCountUp">Count up</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Interval bar: remaining (shrinks) vs progress (grows)">
+                                    <input type="checkbox" id="zarScreenBarGrow" />
+                                    <span id="labZarScreenBarGrow">Bar: progress</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Countdown before start (seconds)">
+                                    <span id="labZarScreenCountdownSec">Countdown</span>
+                                    <input type="number" id="zarScreenCountdownSec" min="0" max="30" step="1" value="5" style="width:74px" />
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;">
+                                    <input type="checkbox" id="zarScreenVoice" />
+                                    <span id="labZarScreenVoice">Voice</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Announce planned reps for the current work block">
+                                    <input type="checkbox" id="zarScreenVoiceReps" />
+                                    <span id="labZarScreenVoiceReps">X reps</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Voice: announce reps (if available)">
+                                    <input type="checkbox" id="zarScreenSayReps" checked />
+                                    <span id="labZarScreenSayReps">Reps</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Voice: announce tempo (RPM)">
+                                    <input type="checkbox" id="zarScreenSayTempo" checked />
+                                    <span id="labZarScreenSayTempo">Tempo</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Voice: announce intensity (0–10)">
+                                    <input type="checkbox" id="zarScreenSayIntensity" checked />
+                                    <span id="labZarScreenSayIntensity">Intensity</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;">
+                                    <input type="checkbox" id="zarScreenMetro" />
+                                    <span id="labZarScreenMetro">Metronome</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;">
+                                    <input type="checkbox" id="zarScreenMusic" />
+                                    <span id="labZarScreenMusic">Music</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;">
+                                    <span id="labZarScreenMusicFile">MP3</span>
+                                    <input type="file" id="zarScreenMusicFile" accept="audio/*" style="width:200px" />
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Loop music while the timer runs">
+                                    <input type="checkbox" id="zarScreenMusicLoop" checked />
+                                    <span id="labZarScreenMusicLoop">Loop</span>
+                                </label>
+                                <button class="btn zarMiniBtn" id="zarScreenPresetSally" type="button" title="Sally preset">Sally</button>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;">
+                                    <span id="labZarScreenMusicVol">Music</span>
+                                    <input type="range" id="zarScreenMusicVol" min="0" max="100" step="1" value="60" style="width:140px" />
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Master volume (affects beeps + metronome)">
+                                    <span id="labZarBeepVol">Sound</span>
+                                    <input type="range" id="zarBeepVol" min="0" max="100" step="1" value="40" oninput="render()" style="width:140px" />
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Prevent screen from sleeping while timer is active (if supported)">
+                                    <input type="checkbox" id="zarScreenWake" checked />
+                                    <span id="labZarScreenWake">Keep awake</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Vibrate on countdown / switches (if supported)">
+                                    <input type="checkbox" id="zarScreenVibrate" />
+                                    <span id="labZarScreenVibrate">Vibrate</span>
+                                </label>
+                                <button class="btn zarMiniBtn" id="zarScreenVibrateTest" type="button">Test</button>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Vibration strength multiplier">
+                                    <span id="labZarScreenVibrateMul">Vibe ×</span>
+                                    <input type="range" id="zarScreenVibrateMul" min="0.5" max="6" step="0.5" value="2" style="width:120px" />
+                                    <span class="mono" id="zarScreenVibrateMulV" style="opacity:.9">2.0×</span>
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="0 = auto (from cadence@max + intensity)">
+                                    <span id="labZarScreenMetroRpm">RPM</span>
+                                    <input type="number" id="zarScreenMetroRpm" min="0" max="240" step="1" value="0" style="width:74px" />
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Metronome click tone (frequency)">
+                                    <span id="labZarScreenMetroHz">Hz</span>
+                                    <input type="number" id="zarScreenMetroHz" min="200" max="4000" step="50" value="1650" style="width:82px" />
+                                </label>
+                                <label class="caption" style="display:flex; gap:6px; align-items:center;" title="Metronome click volume (relative)">
+                                    <span id="labZarScreenMetroVol">Vol</span>
+                                    <input type="range" id="zarScreenMetroVol" min="0" max="200" step="1" value="55" style="width:140px" />
+                                </label>
+                            </div>
+                            <div class="caption mono" id="zarScreenPattern" style="opacity:.8"></div>
+                                    <div class="caption mono" id="zarScreenAutoTempoStatus" style="opacity:.8"></div>
+                            <div class="caption mono" id="zarScreenSysStatus" style="opacity:.8"></div>
+                            <div class="caption mono" id="zarScreenMusicStatus" style="opacity:.8"></div>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Plan overlay (work intervals) -->
+                <div class="zarPlanModal" id="zarPlanModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="zarPlanTitle">
+                    <div class="zarPlanCard">
+                        <div class="zarPlanHead">
+                            <div class="zarPlanTitle" id="zarPlanTitle">Plan</div>
+                            <button class="btn" id="zarPlanClose" type="button" aria-label="Close">✕</button>
+                        </div>
+                        <div class="zarPlanBody">
+                            <table class="zarPlanTable">
+                                <thead>
+                                    <tr>
+                                        <th id="zarPlanThTime">Time</th>
+                                        <th id="zarPlanThInterval">Interval</th>
+                                        <th id="zarPlanThTempo">Tempo</th>
+                                        <th id="zarPlanThReps">Reps</th>
+                                        <th id="zarPlanThTotal">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="zarPlanTbody"></tbody>
+                            </table>
+                            <div class="caption mono" id="zarPlanFooter" style="opacity:.85; margin-top:8px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO MODAL -->
+    <div class="imodal" id="imodal">
+        <div class="imodal-card" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+            <div class="imodal-head">
+                <h3 class="imodal-title" id="infoTitle">Info</h3>
+                <button class="imodal-close" id="iClose">✕</button>
+            </div>
+            <div class="imodal-grid">
+                <div class="ibox">
+                    <h4 id="infoQuickHdr" style="margin:0 0 6px 0">Quick guide</h4>
+                    <div id="infoQuick"></div>
+                </div>
+                <div class="ibox">
+                    <h4 id="infoNotesHdr" style="margin:0 0 6px 0">Coach notes</h4>
+                    <div id="infoNotes"></div>
+                </div>
+                <div class="ibox tauBox">
+                    <h4 id="infoTauHdr" style="margin:0 0 6px 0">τ_ON / τ_OFF</h4>
+                    <div id="infoTau"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DISCLAIMER PANEL -->
+    <div class="wrap">
+        <div class="grid">
+            <div class="card full">
+                <h2 id="hDisc">Disclaimer</h2>
+                <div id="discText" class="caption">
+                    This tool is educational and heuristic. Always consider personal health conditions and consult a
+                    professional if in doubt.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZARUBA PATTERN MINI MODAL -->
+    <div class="zpm" id="zpmodal">
+        <div class="zpm-card" role="dialog" aria-modal="true" aria-labelledby="zpTitle">
+            <div class="zpm-head">
+                <h3 class="zpm-title" id="zpTitle">Zaruba per-minute plan</h3>
+                <button class="zpm-close" id="zpClose" aria-label="Close">✕</button>
+            </div>
+            <div class="zpm-body">
+                <input type="text" id="zpInput" placeholder="e.g., (30@8t20 20@8t15 0/10 30@8t20)*3 or 20/0*3" />
+
+                <details id="zpExplainDet" style="margin-top:10px">
+                    <summary id="zpExplainSum"><span class="ctrlCaret">▾</span>Explain</summary>
+                    <div style="margin-top:8px">
+                        <div class="mono" id="zpExplainPattern" style="white-space:pre-wrap; margin:0; padding:10px; border-radius:10px; border:1px solid rgba(251,191,36,0.35); background:rgba(251,191,36,0.08); color:#fbbf24;"></div>
+                        <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                            <button class="btn" id="zpExplainUpdate" type="button">Update</button>
+                            <button class="btn" id="zpExplainCopy" type="button">Copy</button>
+                            <span class="caption" id="zpExplainHint" style="opacity:.8"></span>
+                        </div>
+                        <pre class="mono" id="zpExplainText" style="white-space:pre-wrap; margin:8px 0 0 0; padding:10px; border-radius:10px; border:1px solid #263241; background:#0b1222; color:#e5e7eb; max-height:42vh; overflow:auto"></pre>
+                    </div>
+                </details>
+
+                <details id="zpPlanDet" style="margin-top:10px">
+                    <summary id="zpPlanSum"><span class="ctrlCaret">▾</span>Plan</summary>
+                    <div style="margin-top:8px">
+                        <table class="zarPlanTable">
+                            <thead>
+                                <tr>
+                                    <th id="zpPlanThTime">Time</th>
+                                    <th id="zpPlanThInterval">Interval</th>
+                                    <th id="zpPlanThTempo">Tempo</th>
+                                    <th id="zpPlanThReps">Reps</th>
+                                    <th id="zpPlanThTotal">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="zpPlanTbody"></tbody>
+                        </table>
+                        <div class="caption mono" id="zpPlanFooter" style="margin-top:8px; opacity:.85"></div>
+                    </div>
+                </details>
+
+                <details id="zpLibDet" style="margin-top:10px">
+                    <summary id="zpLibSum"><span class="ctrlCaret">▾</span>Library</summary>
+                    <div style="margin-top:8px">
+                        <div class="caption" id="zpLibPresetHdr" style="opacity:.85">Presets</div>
+                        <div id="zpLibPresets" style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap"></div>
+
+                        <div class="caption" id="zpLibMyHdr" style="margin-top:10px; opacity:.85">My schemes</div>
+                        <div style="margin-top:6px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                            <input type="text" id="zpLibName" placeholder="Name" style="flex:1 1 220px; min-width:180px" />
+                            <button class="btn" id="zpLibSave" type="button">Save current</button>
+                            <span class="caption" id="zpLibHint" style="opacity:.8"></span>
+                        </div>
+                        <div id="zpLibCustom" style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap"></div>
+
+                        <div class="caption" id="zpLibXHdr" style="margin-top:10px; opacity:.85">Transfer</div>
+                        <div style="margin-top:6px; display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                            <button class="btn" id="zpLibExport" type="button">Export</button>
+                            <button class="btn" id="zpLibCopyJson" type="button">Copy</button>
+                            <button class="btn" id="zpLibImport" type="button">Import</button>
+                        </div>
+                        <textarea class="mono" id="zpLibJson" rows="3" placeholder="JSON..." style="margin-top:6px; width:100%; padding:8px; border-radius:8px; border:1px solid #374151; background:#0b1222; color:#e5e7eb; resize:vertical"></textarea>
+                    </div>
+                </details>
+
+                <details id="zpHelpDet" style="margin-top:10px">
+                    <summary id="zpHelpSum"><span class="ctrlCaret">▾</span>Help</summary>
+                    <div class="caption" id="zarPatMsg" style="margin-top:8px">Enter free-form On/Off pattern. Examples: 30/30 x5, 30/30 *5, 20/40,25/35, or pairs 30 30 20 40. Groups: ( ... )*N. EMOM/milestones: 20/0 (repeats until Duration ends).</div>
+                    <div class="caption" id="zarPatMsg2" style="margin-top:6px">Supports multipliers x (Latin), x (Cyrillic), × and *. You can write 5x30/30, 5*30/30, 30/30x5, or 30/30*5. Group parentheses also work: ( ... )*3.</div>
+                    <div class="mono" id="zarPatMiniSpec" style="white-space:pre-wrap; margin:10px 0 0 0; padding:10px; border-radius:10px; border:1px solid #263241; background:#0b1222; color:#e5e7eb;"></div>
+                </details>
+            </div>
+            <div class="zpm-actions">
+                <button class="btn" id="zpmCancel" type="button">Cancel</button>
+                <button class="btn" id="zpmApply" type="button" title="Apply without closing">Apply</button>
+                <button class="btn" id="zpmConvertPT" type="button" title="Convert p↔t">p↔t</button>
+                <button class="btn" id="zpmEditUniversal" type="button" title="Edit this scheme in Universal Zaruba">Edit in Universal</button>
+                <button class="btn" id="zpmCopy" type="button">Copy</button>
+                <button class="btn" id="zpmSave" type="button" title="Apply and close (Enter)">Enter</button>
+            </div>
+        </div>
+    </div>
+    <div class="imodal" id="summaryModal">
+        <div class="imodal-card" role="dialog" aria-modal="true" aria-labelledby="summaryTitle">
+            <div class="imodal-head">
+                <h3 class="imodal-title" id="summaryTitle">Workout Summary</h3>
+                <button class="imodal-close" id="summaryClose">✕</button>
+            </div>
+            <div class="imodal-grid">
+                <div class="ibox">
+                    <pre id="summaryText"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Floating Big Chart button (mobile) -->
+    <button class="fab-big" id="fabBig" type="button" title="Big chart" aria-label="Big chart">📈</button>
+    <button class="fab-big fab-scheme" id="fabScheme" type="button" title="Scheme" aria-label="Scheme">🧩</button>
+    <button class="fab-big fab-timer" id="fabTimer" type="button" title="Timer" aria-label="Timer">⏱</button>
+
+    <!-- Load summary logic and popup (already loaded in head) -->
+</body>
+
+
+<!-- Mirrored from photoskiff.com/zaruba/zone-comparator-2.0-schema.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 14 Feb 2026 04:42:34 GMT -->
+</html>
+

@@ -1,0 +1,33 @@
+{
+  "name": "training-comparator",
+  "version": "1.0.0",
+  "description": "taymer",
+  "author": "Kamo",
+  "license": "MIT",
+  "main": "main.js",
+  "build": {
+    "appId": "com.yourapp.trainingcomparator",
+    "productName": "Training Comparator",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "app/favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  }
+}

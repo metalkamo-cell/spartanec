@@ -1,0 +1,15 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.yourapp.trainingcomparator
+productName: Training Comparator
+win:
+  target: nsis
+  icon: app/favicon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+files: []
+electronVersion: 33.4.11
