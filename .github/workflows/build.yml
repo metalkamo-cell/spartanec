@@ -1,20 +1,55 @@
 name: Build APK
-on: [push]
+on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Скачиваем твой код из репозитория
       - uses: actions/checkout@v2
+
+      # 2. Устанавливаем Java (она нужна для Android SDK)
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Устанавливаем Android SDK (самое главное!)
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # 4. Устанавливаем конкретную версию build-tools (где лежит aidl)
+      - name: Install build-tools
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "build-tools;35.0.0"
+
+      # 5. Добавляем путь к build-tools в системную переменную PATH, чтобы Buildozer их нашёл
+      - name: Add build-tools to PATH
+        run: echo "$ANDROID_SDK_ROOT/build-tools/35.0.0" >> $GITHUB_PATH
+
+      # 6. Проверяем, что aidl теперь доступен (для уверенности)
+      - name: Check aidl
+        run: which aidl && aidl --version
+
+      # 7. Устанавливаем Python и зависимости для Buildozer
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
-      - name: Install dependencies
+
+      - name: Install Buildozer
         run: |
           pip install buildozer cython
+
+      # 8. Запускаем сборку!
       - name: Build with Buildozer
         run: |
           buildozer -v android debug
+
+      # 9. Сохраняем готовый APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
